@@ -1,6 +1,18 @@
+//   <div class="cursor">
+//     <div class="cursor--small"></div>
+//     <div class="cursor--large"></div>
+//     <div class="cursor--text">
+//       <div class="text">GO HERE! GO HERE! GO HERE! GO HERE!</div>
+//     </div>
+//   </div>
+
+
+//   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>
+//   <script src="https://cdn.jsdelivr.net/npm/circletype@2.3.0/dist/circletype.min.js"></script>
+
 console.clear();
 
-console.log("Made with <3 by mediative.it");
+console.log("</> with <3 by mediative.it")
 
 const { gsap, CircleType } = window;
 
@@ -20,125 +32,138 @@ let circleType = new CircleType(cursorTextEl);
 circleType.radius(50);
 
 setTimeout(() => {
-	initialCursorHeight = circleType.container.style.getPropertyValue("height");
-	console.log(initialCursorHeight);
+initialCursorHeight = circleType.container.style.getPropertyValue("height");
+console.log(initialCursorHeight);
 }, 50);
 
-hoverItems.forEach((item) => {
-	item.addEventListener("pointerenter", handlePointerEnter);
-	item.addEventListener("pointerleave", handlePointerLeave);
+hoverItems.forEach(item => {
+item.addEventListener("pointerenter", handlePointerEnter);
+item.addEventListener("pointerleave", handlePointerLeave);
 });
 
 let mouse = {
-	x: -100,
-	y: -100
+x: -100,
+y: -100
 };
+
 
 document.body.addEventListener("pointermove", updateCursorPosition);
 
 function updateCursorPosition(e) {
-	mouse.x = e.pageX;
-	mouse.y = e.pageY;
+mouse.x = e.pageX;
+mouse.y = e.pageY;
 }
 
 function updateCursor() {
-	gsap.set([cursorInner, cursorTextContainerEl], {
-		x: mouse.x,
-		y: mouse.y
-	});
+gsap.set([cursorInner, cursorTextContainerEl], {
+x: mouse.x,
+y: mouse.y
+});
 
-	gsap.to(cursorOuter, {
-		duration: 0.15,
-		x: mouse.x,
-		y: mouse.y
-	});
 
-	if (!isHovered) {
-		gsap.to(cursorTextContainerEl, hoverEffectDuration * 0.5, {
-			opacity: 0
-		});
-		gsap.set(cursorTextContainerEl, {
-			rotate: 0
-		});
-	}
+gsap.to(cursorOuter, {
+duration: 0.15,
+x: mouse.x,
+y: mouse.y
+});
 
-	requestAnimationFrame(updateCursor);
+
+if (!isHovered) {
+gsap.to(cursorTextContainerEl, hoverEffectDuration * 0.5, {
+  opacity: 0
+});
+
+gsap.set(cursorTextContainerEl, {
+  rotate: 0
+});
+
+}
+
+requestAnimationFrame(updateCursor);
 }
 
 updateCursor();
 
 function handlePointerEnter(e) {
-	isHovered = true;
+isHovered = true;
 
-	const target = e.currentTarget;
-	updateCursorText(target);
+const target = e.currentTarget;
+updateCursorText(target);
 
-	gsap.set([cursorTextContainerEl, cursorTextEl], {
-		height: initialCursorHeight,
-		width: initialCursorHeight
-	});
+gsap.set([cursorTextContainerEl, cursorTextEl], {
+height: initialCursorHeight,
+width: initialCursorHeight
+});
 
-	gsap.fromTo(
-		cursorTextContainerEl,
-		{
-			rotate: 0
-		},
-		{
-			duration: cursorRotationDuration,
-			rotate: 360,
-			ease: "none",
-			repeat: -1
-		}
-	);
 
-	gsap.to(cursorInner, hoverEffectDuration, {
-		scale: 2
-	});
+gsap.fromTo(
+cursorTextContainerEl,
+{
+  rotate: 0
+},
 
-	gsap.fromTo(
-		cursorTextContainerEl,
-		hoverEffectDuration,
-		{
-			scale: 1.2,
-			opacity: 0
-		},
-		{
-			delay: hoverEffectDuration * 0.75,
-			scale: 1,
-			opacity: 1
-		}
-	);
-	gsap.to(cursorOuter, hoverEffectDuration, {
-		scale: 1.2,
-		opacity: 0
-	});
+{
+  duration: cursorRotationDuration,
+  rotate: 360,
+  ease: "none",
+  repeat: -1
+});
+
+
+
+gsap.to(cursorInner, hoverEffectDuration, {
+scale: 2
+});
+
+
+gsap.fromTo(
+cursorTextContainerEl,
+hoverEffectDuration,
+{
+  scale: 1.2,
+  opacity: 0
+},
+
+{
+  delay: hoverEffectDuration * 0.75,
+  scale: 1,
+  opacity: 1
+});
+
+
+gsap.to(cursorOuter, hoverEffectDuration, {
+scale: 1.2,
+opacity: 0
+});
+
 }
 
 function handlePointerLeave() {
-	isHovered = false;
-	gsap.to([cursorInner, cursorOuter], hoverEffectDuration, {
-		scale: 1,
-		opacity: 1
-	});
+isHovered = false;
+gsap.to([cursorInner, cursorOuter], hoverEffectDuration, {
+scale: 1,
+opacity: 1
+});
+
 }
 
 function updateCursorText(textEl) {
-	const cursorTextRepeatTimes = textEl.getAttribute("data-cursor-text-repeat");
-	const cursorText = returnMultipleString(
-		textEl.getAttribute("data-cursor-text"),
-		cursorTextRepeatTimes
-	);
+const cursorTextRepeatTimes = textEl.getAttribute("data-cursor-text-repeat");
+const cursorText = returnMultipleString(
+textEl.getAttribute("data-cursor-text"),
+cursorTextRepeatTimes);
 
-	circleType.destroy();
 
-	cursorTextEl.innerHTML = cursorText;
-	circleType = new CircleType(cursorTextEl);
+circleType.destroy();
+
+cursorTextEl.innerHTML = cursorText;
+circleType = new CircleType(cursorTextEl);
 }
 
 function returnMultipleString(string, count) {
-	let s = "";
-	for (let i = 0; i < count; i++) {
-		s += ` ${string} `;
-	}
-	return s;
+let s = "";
+for (let i = 0; i < count; i++) {
+s += ` ${string} `;
+}
+return s;
 }
