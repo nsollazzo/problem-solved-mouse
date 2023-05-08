@@ -1,5 +1,7 @@
 console.clear();
 
+console.log("made with <3 by mediative.it')
+
 const { gsap, CircleType } = window;
 
 const cursorOuter = document.querySelector(".cursor--large");
